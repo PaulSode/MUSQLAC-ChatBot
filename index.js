@@ -17,7 +17,7 @@ chatForm.addEventListener('submit', event => {
     "inputs": text,
     "parameters": {}
 }).then((response) => {
-  appendMessage('bot', JSON.stringify(response))
+    appendMessage('bot', response[0].generated_text)
 });
 });
 
