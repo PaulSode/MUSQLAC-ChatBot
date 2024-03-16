@@ -2,8 +2,7 @@ const chatForm = get('form');
 const chatInput = get('input');
 const chatBox = get('main');
 
-appendMessage('bot', 'This is a bot bubble');
-appendMessage('user', 'This is a user bubble');
+appendMessage('bot', 'Hello, I am Chat-CPT, a chatbot designed to help you choose a treatment depending on your symptoms. Please describe your symptoms.')
 
 chatForm.addEventListener('submit', event => {
   event.preventDefault();
@@ -11,15 +10,37 @@ chatForm.addEventListener('submit', event => {
   if (!text) return;
   
   appendMessage('user', text);
+  tempMessage()
   chatInput.value = '';
 
   query({
     "inputs": text,
     "parameters": {}
 }).then((response) => {
-    appendMessage('bot', response[0].generated_text)
+  botAnswerReceived(response[0].generated_text)
 });
 });
+
+function tempMessage(){
+  const bubble = `
+    <div class="msg -bot temp">
+        <div class="bubble">Chat-CPT is writing...</div>
+    </div>`;
+  chatBox.insertAdjacentHTML('beforeend', bubble);
+  chatBox.scrollTop += 500;
+}
+
+function botAnswerReceived(text) {
+  const bubble = `
+  <div class="msg -bot">
+      <div class="bubble">${text}</div>
+  </div>`;
+
+  document.querySelectorAll('.temp').forEach(e => e.remove());
+
+
+chatBox.insertAdjacentHTML('beforeend', bubble);
+}
 
 function appendMessage(side, text) {
   const bubble = `
